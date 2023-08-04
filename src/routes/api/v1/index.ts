@@ -19,10 +19,24 @@ const clientOptions = {
   },
 };
 
-router.get("/connect", (req: Request, res: Response) => {
-  const client = elastic.newClient(clientOptions);
-  const text = elastic.testConnection(client);
-  res.send(text);
+router.get("/index/:index", async (req: Request, res: Response) => {
+  try {
+    const client = elastic.newClient(clientOptions);
+    const result = await elastic.getIndex(client, req.params.index);
+    res.json(result)
+  } catch (error) {
+    res.send(error)
+  }
+});
+
+router.get("/connect", async (req: Request, res: Response) => {
+  try {
+    const client = elastic.newClient(clientOptions);
+    const text = await elastic.testConnection(client);
+    res.send(text);
+  } catch (error) {
+    res.send(error)
+  }
 });
 
 router.get("/", (req: Request, res: Response) => {

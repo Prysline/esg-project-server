@@ -24,7 +24,28 @@ async function testConnection(client: Client): Promise<string> {
   }
 }
 
+async function getIndex(client: Client, indexName: string): Promise<unknown> {
+  try {
+    const result = await client.search({ index: indexName })
+    const hits: unknown[] = []
+
+    console.log(result)
+    result.hits.hits.forEach(hit => {
+      console.log(hit._source)
+      hits.push(hit._source)
+    })
+
+    return hits
+  } catch (error) {
+    console.error('Error executing search:', error);
+
+    return `Error executing search: ${error}`
+  }
+}
+
+
 export default {
   newClient,
   testConnection,
+  getIndex
 };
